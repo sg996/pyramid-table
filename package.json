@@ -1,0 +1,22 @@
+{
+  "name": "pyramid-table",
+  "version": "0.0.0",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview",
+    "initialize": "sh initialize.sh",
+    "update": "sh update.sh",
+    "deploy": "sh deploy.sh"
+  },
+  "dependencies": {
+    "antd": "^4.18.5",
+    "react": "^17.0.2",
+    "react-dom": "^17.0.2"
+  },
+  "devDependencies": {
+    "@vitejs/plugin-react": "^1.0.7",
+    "less": "^4.1.2",
+    "vite": "^2.7.2"
+  }
+}
