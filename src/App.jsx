@@ -105,7 +105,18 @@ export default class App extends Component {
     }, [[]]);
   };
 
-  setLayer = (e) => this.setState({ layer: e });
+  setLayer = (e, flag = false) => {
+    if (!flag) {
+      this.setState({ layer: e });
+    } else {
+      this.setState({
+        layer: e,
+        designAttrs: [],
+        previewAttrs: [],
+        skuAttrs: [],
+      });
+    }
+  }
 
   render() {
     const {
@@ -126,7 +137,7 @@ export default class App extends Component {
                 <FormItem label='组合项个数'>
                   <Space>
                     <InputNumber min={previewAttrs.length} max={designAttrsList.length} value={layer} onChange={this.setLayer} />
-                    <Button type="primary" onClick={() => { this.setLayer(LAYER); }} > Reset </Button>
+                    <Button type="primary" onClick={() => { this.setLayer(LAYER, true); }} > Reset </Button>
                   </Space>
                 </FormItem>
               </Col>
@@ -134,6 +145,7 @@ export default class App extends Component {
                 <FormItem label="设计属性" className="design-attributes">
                   <CheckboxGroup
                     style={{ width: '100%' }}
+                    value={designAttrs}
                     onChange={e => this.checkboxChange(e, designAttrsList)}
                   >
                     <Row>
