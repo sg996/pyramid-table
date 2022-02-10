@@ -1,6 +1,7 @@
 # pyramid-table
 
-金字塔表格
+- 金字塔表格
+- 基于 React + Ant Design，实现设计属性两种数据组合及 金字塔表格 展示效果。Vite 打包构建。
 
 # 效果预览
 

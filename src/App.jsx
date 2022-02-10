@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { Layout, Form, Table, Checkbox, Row, Col, Tag, InputNumber, Button, Space } from 'antd';
-import ReactJson from 'react-json-view'
+import ReactJson from 'react-json-view';
 import './App.less';
 
 const { Content } = Layout;
@@ -11,9 +11,14 @@ const CheckboxGroup = Checkbox.Group;
 const LAYER = 3;
 let maxCloumn = 0;
 
-const layout = {
+const LAYOUT_FORM = {
   labelCol: { span: 4 },
   wrapperCol: { span: 20 },
+};
+
+const LAYOUT_ITEM = {
+  labelCol: { span: 8 },
+  wrapperCol: { span: 16 },
 };
 
 export default class App extends Component {
@@ -131,61 +136,54 @@ export default class App extends Component {
     return (
       <Layout className="site-layout-background" style={{ padding: '25px', minHeight: '100vh' }}>
         <Content>
-          <Form {...layout}>
+          <Form {...LAYOUT_FORM}>
+            <FormItem label='组合项个数'>
+              <Space>
+                <InputNumber min={previewAttrs.length} max={designAttrsList.length} value={layer} onChange={this.setLayer} />
+                <Button type="primary" onClick={() => { this.setLayer(LAYER, true); }} > Reset </Button>
+              </Space>
+            </FormItem>
+            <FormItem label="设计属性" className="design-attributes">
+              <CheckboxGroup
+                style={{ width: '100%' }}
+                value={designAttrs}
+                onChange={e => this.checkboxChange(e, designAttrsList)}
+              >
+                <Row>
+                  {
+                    designAttrsList.map(item => (
+                      <Col key={item.id} title={item.name} span={12}>
+                        <Checkbox
+                          value={item.id}
+                          checked={designAttrs.includes(item.id)}
+                          disabled={
+                            designAttrs.length >= layer && !designAttrs.includes(item.id)
+                          }
+                        >
+                          <div className="checked-item">{`${item.name}（${item.values.length}）`}</div>
+                          {designAttrs.includes(item.id) ? <Tag color="gold">{`第${designAttrs.indexOf(item.id) + 1}行`}</Tag> : null}
+                        </Checkbox>
+                      </Col>
+                    ))
+                  }
+                </Row>
+              </CheckboxGroup>
+            </FormItem>
+            <FormItem label="设计属性组合预览">
+              <Table
+                className='pyramid-table'
+                bordered
+                rowKey="key0"
+                columns={this.getColumns(previewAttrs)}
+                dataSource={previewAttrs}
+                showHeader={false}
+                pagination={false}
+                locale={{ emptyText: '暂无数据' }}
+              />
+            </FormItem>
             <Row>
-              <Col span={24}>
-                <FormItem label='组合项个数'>
-                  <Space>
-                    <InputNumber min={previewAttrs.length} max={designAttrsList.length} value={layer} onChange={this.setLayer} />
-                    <Button type="primary" onClick={() => { this.setLayer(LAYER, true); }} > Reset </Button>
-                  </Space>
-                </FormItem>
-              </Col>
-              <Col span={24}>
-                <FormItem label="设计属性" className="design-attributes">
-                  <CheckboxGroup
-                    style={{ width: '100%' }}
-                    value={designAttrs}
-                    onChange={e => this.checkboxChange(e, designAttrsList)}
-                  >
-                    <Row>
-                      {
-                        designAttrsList.map(item => (
-                          <Col key={item.id} title={item.name} span={12}>
-                            <Checkbox
-                              value={item.id}
-                              checked={designAttrs.includes(item.id)}
-                              disabled={
-                                designAttrs.length >= layer && !designAttrs.includes(item.id)
-                              }
-                            >
-                              <div className="checked-item">{`${item.name}（${item.values.length}）`}</div>
-                              {designAttrs.includes(item.id) ? <Tag color="gold">{`第${designAttrs.indexOf(item.id) + 1}行`}</Tag> : null}
-                            </Checkbox>
-                          </Col>
-                        ))
-                      }
-                    </Row>
-                  </CheckboxGroup>
-                </FormItem>
-              </Col>
-              <Col span={24}>
-                <FormItem label="设计属性组合预览">
-                  <Table
-                    className='pyramid-table'
-                    bordered
-                    rowKey="key0"
-                    columns={this.getColumns(previewAttrs)}
-                    dataSource={previewAttrs}
-                    showHeader={false}
-                    pagination={false}
-                    // scroll={{ x: true }}
-                    locale={{ emptyText: '暂无数据' }}
-                  />
-                </FormItem>
-              </Col>
-              <Col span={10} offset={2}>
-                <FormItem label="组合数据">
+              <Col span={12}>
+                <FormItem label="组合数据" {...LAYOUT_ITEM}>
                   <ReactJson
                     src={previewAttrs}
                     theme="google"
@@ -195,8 +193,8 @@ export default class App extends Component {
                   />
                 </FormItem>
               </Col>
-              <Col span={10} offset={2}>
-                <FormItem label="sku 组合数据">
+              <Col span={12}>
+                <FormItem label="sku 组合数据" {...LAYOUT_ITEM}>
                   <ReactJson
                     src={this.skuCombination(skuAttrs)}
                     theme="google"
