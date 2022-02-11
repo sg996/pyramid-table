@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Layout, Form, Table, Checkbox, Row, Col, Tag, InputNumber, Button, Space } from 'antd';
+import { Layout, Form, Table, Checkbox, Row, Col, Tag, InputNumber, Button, Space, Radio } from 'antd';
 import ReactJson from 'react-json-view';
 import './App.less';
 
@@ -9,7 +9,6 @@ const CheckboxGroup = Checkbox.Group;
 
 // 默认【设计属性】最大选中个数，即 【设计属性组合预览】行数
 const LAYER = 3;
-let maxCloumn = 0;
 
 const LAYOUT_FORM = {
   labelCol: { span: 4 },
@@ -20,6 +19,8 @@ const LAYOUT_ITEM = {
   labelCol: { span: 8 },
   wrapperCol: { span: 16 },
 };
+
+let maxCloumn = 0;
 
 export default class App extends Component {
   constructor(props) {
@@ -131,6 +132,7 @@ export default class App extends Component {
       previewAttrs = [],
       skuAttrs = [],
     } = this.state;
+    const skuComAttrs = this.skuCombination(skuAttrs);
     console.log(previewAttrs, skuAttrs);
 
     return (
@@ -181,6 +183,19 @@ export default class App extends Component {
                 locale={{ emptyText: '暂无数据' }}
               />
             </FormItem>
+            <FormItem label="sku 组合预览">
+              <Space size={[8, 12]} wrap>
+                {
+                  skuComAttrs.length > 1 ? skuComAttrs.map((project, pIndex) => (
+                    <Radio.Group key={pIndex}>
+                      {
+                        project.map((item, index) => (<Radio.Button value={item} key={index}>{item}</Radio.Button>))
+                      }
+                    </Radio.Group>
+                  )) : '-'
+                }
+              </Space>
+            </FormItem>
             <Row>
               <Col span={12}>
                 <FormItem label="组合数据" {...LAYOUT_ITEM}>
@@ -196,7 +211,7 @@ export default class App extends Component {
               <Col span={12}>
                 <FormItem label="sku 组合数据" {...LAYOUT_ITEM}>
                   <ReactJson
-                    src={this.skuCombination(skuAttrs)}
+                    src={skuComAttrs}
                     theme="google"
                     iconStyle="square"
                     collapsed={true}
